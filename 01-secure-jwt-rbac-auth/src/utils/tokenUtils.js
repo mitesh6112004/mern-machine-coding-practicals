@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import config from "../config/config.js";
 
-export const hashTokens = (token) => {
+export const hashToken = (token) => {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
