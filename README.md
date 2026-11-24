@@ -35,4 +35,5 @@ Each practical follows a clean **Industrial MVC + Middleware** architecture with
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/mitesh6112004/mern-machine-coding-practicals.git
-   cd mern-machine-coding-practicals```
+   cd mern-machine-coding-practicals
+   ```
