@@ -18,7 +18,7 @@ Each practical follows a clean **Industrial MVC + Middleware** architecture with
 
 | # | Practical Title | Key Concepts & Security Implementations | Status |
 | :--- | :--- | :--- | :--- |
-| **01** | [**Secure JWT Authentication & RBAC System**](./01-secure-jwt-rbac-auth) | Dual-Token Flow (Access + `httpOnly` Cookie Refresh Token), Token Rotation & Reuse Detection, Instant Session Revocation (`tokenVersion`), SHA-256 Hashed DB Tokens, Role-Based Access Control (`user`/`admin`), Rate Limiting & Helmet | 🟡 **In Progress** |
+| **01** | [**Secure JWT Authentication & RBAC System**](./01-secure-jwt-rbac-auth) | Dual-Token Flow (Access + `httpOnly` Cookie Refresh Token), Token Rotation & Reuse Detection, Instant Session Revocation (`tokenVersion`), SHA-256 Hashed DB Tokens, Role-Based Access Control (`user`/`admin`), Rate Limiting & Helmet | ✅ **Completed** |
 
 ---
 
