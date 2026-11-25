@@ -143,3 +143,109 @@ export const loginUser = async (req,res) => {
   
 
 }
+
+export const refreshAccessToken = async (req,res) => {
+   const { maxAge, ...clearCookieOptions } = cookieOptions;
+  try {
+      const refreshToken = req.cookies?.refreshToken; 
+
+      if(!refreshToken) {
+        return res.status(401).json({
+          success: false,
+          message : "Refresh token is missing"
+        })
+      }
+
+      const decoded = verifyRefreshToken(refreshToken);
+      const user = await User.findOne({ _id : decoded.id}).select("+refreshTokenHash");
+     
+
+      if(!user || !user.refreshTokenHash) {
+        res.clearCookie("refreshToken", clearCookieOptions);
+        return res.status(401).json({
+          success : false,
+          message : "Invalid Session, Please login again"
+        })
+      }
+
+      const incomingHash = hashToken(refreshToken);
+
+      if(user.refreshTokenHash !== incomingHash) {
+        user.refreshTokenHash = null;
+        user.tokenVersion += 1;
+        await user.save();
+
+        res.clearCookie("refreshToken", clearCookieOptions);
+        return res.status(401).json({
+          success : false,
+          message : "Security Alert: token reuse detection! all sessions revoked. "
+        })
+      }
+
+      const tokens = generateToken(user);
+      user.refreshTokenHash = hashToken(tokens.refreshToken);
+      await user.save(); 
+
+      res.cookie("refreshToken", tokens.refreshToken, cookieOptions);
+
+      return res.status(200).json({
+        success: true,
+        message: "Token rotate successfully",
+        accessToken: tokens.accessToken,
+      });
+
+
+  } catch (error) {
+    res.clearCookie("refreshToken", clearCookieOptions);
+    return res.status(403).json({
+      success : false,
+      message : "Invalid or expired refresh token"
+    })
+  }
+}
+
+export const getMe = (req,res) => {
+  return res.status(200).json({
+    success : true,
+    data : {
+      id: req.user._id,
+      name : req.user.name,
+      email : req.user.email,
+      role : req.user.role
+    }
+  })
+}
+
+export const  logoutUser = async(req,res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if(user){
+      user.refreshTokenHash = null; 
+      user.tokenVersion += 1 ;
+      await user.save();
+    }
+
+    const {maxAge, ...clearCookieOptions } = cookieOptions;
+    res.clearCookie("refreshToken",clearCookieOptions);
+
+    return res.status(200).json({
+      success: true,
+      message : "Logout Successfully"
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "Server error"
+    })
+  }
+}
+
+export const getAdminDashboard = async (req,res) =>  {
+  return res.status(200).json({
+    success: true,
+    message: "Welcome Admin! authorized admin granted",
+    adminId : req.user._id
+  })
+}
