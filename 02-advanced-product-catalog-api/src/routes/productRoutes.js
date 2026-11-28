@@ -1,5 +1,5 @@
 import express from "express";
-import {createProduct, getProductById, getProducts, updateProduct} from "../controllers/productController.js"
+import {createProduct, deleteProduct, getProductById, getProducts, updateProduct} from "../controllers/productController.js"
 import { validateObjectId } from "../middlewares/validateObjectId.js";
 import { requireAdminKey } from "../middlewares/adminAuth.js";
 
@@ -9,5 +9,6 @@ router.get("/", getProducts);
 router.get("/:id",validateObjectId,getProductById);
 router.post("/", requireAdminKey, createProduct);
 router.put("/:id", requireAdminKey, validateObjectId, updateProduct);
+router.delete("/:id", requireAdminKey, validateObjectId, deleteProduct);
 
 export default router; 
