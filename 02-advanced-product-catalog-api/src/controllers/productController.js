@@ -44,3 +44,17 @@ export const getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+// 3. POST /api/products (Create Product - Admin)
+export const createProduct = async (req, res, next) => {
+  try {
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
