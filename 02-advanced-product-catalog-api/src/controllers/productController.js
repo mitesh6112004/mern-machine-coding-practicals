@@ -58,3 +58,27 @@ export const createProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+// 4. PUT /api/products/:id (Update Product - Admin)
+export const updateProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
